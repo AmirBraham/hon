@@ -1,42 +1,44 @@
-import { useState, useRef } from "react"
 import Footer from './Footer';
 import Header from './Header';
-import { ReactReader } from "react-reader"
-
+import { useRef, useState, useEffect } from 'react'
+import {
+  EpubViewer,
+  ReactEpubViewer
+} from 'react-epub-viewer'
 function App() {
+  const [search, setSearch] = useState("")
+  const [results, setResults] = useState([])
+  const viewerRef = useRef(null);
+  const timer = useRef(null)
 
-  const [page, setPage] = useState('')
-  const renditionRef = useRef(null)
-  const tocRef = useRef(null)
-  const locationChanged = (epubcifi) => {
-    if (renditionRef.current && tocRef.current) {
-      const { displayed, href } = renditionRef.current.location.start
-      const chapter = tocRef.current.find((item) => item.href === href)
-      setPage(`Page ${displayed.page} of ${displayed.total} in chapter ${chapter ? chapter.label : 'n/a'}`)
-    }
-  }
+  useEffect(() => {
+
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => {
+      fetch("http://127.0.0.1:5000/").then(res => {
+        console.log(res)
+      })
+    }, 1000)
+
+  }, [search])
   return (
     <div className="App bg-gray-20">
       <Header />
-      <div style={{ height: "100vh", position: "sticky" }}>
+      {<div className="flex justify-center">
+        <input
+          value={search} onChange={e => setSearch(e.target.value)} type="search" className=" text-center shadow rounded border-0 p-3 outline-none" placeholder="Search by name..." />
+      </div >}
 
-
-        <ReactReader
-
-          locationChanged={locationChanged}
-          url="https://gerhardsletten.github.io/react-reader/files/alice.epub"
-          getRendition={(rendition) => renditionRef.current = rendition}
-          tocChanged={toc => tocRef.current = toc}
+      {/* <div style={{ position: "relative", height: "100%" }}>
+        <ReactEpubViewer
+          viewerOption={{
+            flow: "paginated"
+          }}
+          url={'https://gerhardsletten.github.io/react-reader/files/alice.epub'}
+          ref={viewerRef}
         />
-      </div>
-      <div style={{ bottom: '1rem', right: '1rem', left: '1rem', textAlign: 'center', zIndex: 1 }}>
-        {page}
-      </div>
+      </div> */}
 
-
-      {/* <div className="flex justify-center">
-        <input type="search" className=" text-center shadow rounded border-0 p-3 outline-none" placeholder="Search by name..." />
-      </div > */}
 
       <Footer />
     </div >
