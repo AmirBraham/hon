@@ -3,6 +3,7 @@ from libgen_api import LibgenSearch
 from libgen_api.libgen_search import filter_results
 from libgen_api.search_request import SearchRequest
 import requests
+import urllib.parse
 
 
 class SearchRequestModified(SearchRequest):
@@ -109,4 +110,20 @@ class LibgenSearchModified(LibgenSearch):
 
         return filtered_results
 
+    def resolve_image(self, item):
+        def base_url(url, with_path=False):
+            parsed = urllib.parse.urlparse(url)
+            path = '/'.join(parsed.path.split('/')[:-1]) if with_path else ''
+            parsed = parsed._replace(path=path)
+            parsed = parsed._replace(params='')
+            parsed = parsed._replace(query='')
+            parsed = parsed._replace(fragment='')
+            return parsed.geturl()
 
+        mirror_1 = item["Mirror_1"]
+        page = requests.get(mirror_1)
+        soup = BeautifulSoup(page.text, "html.parser")
+        img = soup.find("img")
+        if img.has_attr('src'):
+            return base_url(mirror_1) + img['src']
+        return ""
