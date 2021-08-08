@@ -1,33 +1,26 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { BookContext } from './BookContext'
 
-function BookItem({ book }) {
+function BookItem(props) {
+    const { bookContext, setBookContext } = useContext(BookContext)
     const [src, setSrc] = useState("")
-    const { Author, ISBN, Language, Image, Title, Size, Pages } = book
+    const { Author, ISBN, Language, Image, Title, Size, Pages, DownloadLinks } = props.book
+    console.log(bookContext, setBookContext)
+    console.log(DownloadLinks)
     return (
-        <div className="min-h-screen  py-6 flex flex-col justify-center sm:py-12 container mx-auto shadow-lg rounded-lg max-w-md hover:shadow-2xl transition duration-300 ">
+        <div className="my-12 px-12 w-1/6 overflow-hidden sm:my-2 sm:px-2 md:w-1/3 lg:w-1/3 xl:my-2 xl:px-2 xl:w-1/4 ">
+            <img className="flex  rounded-3xl  object-contain h-48 self-center w-full" src={`data:image/png;base64, ${Image}`} alt="" />
+            <h2 className="text-1xl font-bold">{Title}</h2>
+            <div className="text-lg text-gray-800">{Author}</div>
+            <div className="flex text-2xl font-bold text-a">
+                <button onClick={() => setBookContext(DownloadLinks["GET"])}>
 
-            <div className="py-3 sm:max-w-xl sm:mx-auto">
-                <div className=" shadow-lg border-gray-100 max-h-80	 border sm:rounded-3xl p-8 flex space-x-8">
-                    <div className="h-48 overflow-visible w-1/2">
-                        <img className="rounded-3xl shadow-lg" src={`data:image/png;base64, ${Image}`} alt="" />
+                    Read
+                </button>
 
-                    </div>
-                    <div className="flex flex-col w-1/2 space-y-4">
-                        <div className="flex justify-between items-start">
-                            <h2 className="text-1xl font-bold">{Title}</h2>
-                            <div className="bg-yellow-400 font-bold rounded-xl p-2">7.2</div>
-                        </div>
-                        <div>
-                            <div className="text-sm text-gray-400">Author</div>
-                            <div className="text-lg text-gray-800">{Author}</div>
-                        </div>
-                        <div className="flex text-2xl font-bold text-a">Read</div>
-                    </div>
-
-                </div>
             </div>
-
         </div>
+
     )
 }
 

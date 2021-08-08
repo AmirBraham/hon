@@ -1,17 +1,19 @@
 import Footer from './Footer';
 import Header from './Header';
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useContext } from 'react'
 import {
-  EpubViewer,
   ReactEpubViewer
 } from 'react-epub-viewer'
 import BookItem from './BookItem';
+import { BookContext } from './BookContext';
 function App() {
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
   const viewerRef = useRef(null);
   const timer = useRef(null)
+
+  const [bookContext, setBookContext] = useState("")
 
   useEffect(() => {
 
@@ -32,36 +34,38 @@ function App() {
     }
 
   }, [search])
-  console.log(results)
-
   return (
-    <div className="App bg-gray-20">
-      <Header />
-      {<div className="flex justify-center">
-        <input
-          value={search} onChange={e => setSearch(e.target.value)} type="search" className=" text-center shadow rounded border-0 p-3 outline-none" placeholder="Search by name..." />
-      </div >}
+    <BookContext.Provider value={{ bookContext, setBookContext }}>
 
-      {loading && <p>Loading results...</p>}
-      <div class="flex items-stretch ...">
-        {
-          results.map(book => <BookItem key={book["ISBN"]} book={book} />
-          )
-        }
-      </div>
-      {/* <div style={{ position: "relative", height: "100%" }}>
-        <ReactEpubViewer
-          viewerOption={{
-            flow: "paginated"
-          }}
-          url={'https://gerhardsletten.github.io/react-reader/files/alice.epub'}
-          ref={viewerRef}
-        />
-      </div> */}
+      <div className="App bg-gray-20">
+        <Header />
+        {!bookContext && <>
+          {<div className="flex justify-center">
+            <input
+              value={search} onChange={e => setSearch(e.target.value)} type="search" className=" text-center shadow rounded border-0 p-3 outline-none" placeholder="Search by name..." />
+          </div >}
+
+          {loading && <p>Loading results...</p>}
+          <div className="flex flex-wrap -mx-12 overflow-hidden sm:-mx-2 xl:-mx-2">
+            {
+              results.map(book => <BookItem key={book["ISBN"]} book={book} />)
+            }
+          </div>
+        </>}
+        {bookContext && <div style={{ position: "relative", height: "100%" }}>
+          <ReactEpubViewer
+            viewerOption={{
+              flow: "paginated"
+            }}
+            url={bookContext}
+            ref={viewerRef}
+          />
+        </div>}
 
 
-      <Footer />
-    </div >
+        <Footer />
+      </div >
+    </BookContext.Provider>
   );
 }
 
