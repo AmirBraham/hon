@@ -110,12 +110,3 @@ class LibgenSearchModified(LibgenSearch):
         return filtered_results
 
 
-s = LibgenSearchModified()
-
-title_filters = {"Extension": "epub"}
-
-results = s.search_title_filtered(
-    "the hard thing about hard things", title_filters, exact_match=True)
-
-download_links = s.resolve_download_links(
-    results[0]) if len(results) > 0 else []

@@ -5,8 +5,10 @@ import {
   EpubViewer,
   ReactEpubViewer
 } from 'react-epub-viewer'
+import BookItem from './BookItem';
 function App() {
   const [search, setSearch] = useState("")
+  const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
   const viewerRef = useRef(null);
   const timer = useRef(null)
@@ -14,13 +16,24 @@ function App() {
   useEffect(() => {
 
     clearTimeout(timer.current)
-    timer.current = setTimeout(() => {
-      fetch("http://127.0.0.1:5000/").then(res => {
-        console.log(res)
-      })
-    }, 1000)
+    if (search !== "") {
+      timer.current = setTimeout(() => {
+        console.log("rendering")
+        setLoading(true)
+        fetch(`http://localhost:5000/${search}`).then(res => res.json()).then(({ message }) => {
+          setResults(message)
+          setLoading(false)
+        }).catch(err => {
+          console.log(err)
+          setLoading(false)
+        })
+      }, 1000)
+      return () => clearTimeout(timer.current)
+    }
 
   }, [search])
+  console.log(results)
+
   return (
     <div className="App bg-gray-20">
       <Header />
@@ -29,6 +42,12 @@ function App() {
           value={search} onChange={e => setSearch(e.target.value)} type="search" className=" text-center shadow rounded border-0 p-3 outline-none" placeholder="Search by name..." />
       </div >}
 
+      {loading && <p>Loading results...</p>}
+
+      {
+        results.map(book => <BookItem key={book["ISBN"]} book={book} />
+        )
+      }
       {/* <div style={{ position: "relative", height: "100%" }}>
         <ReactEpubViewer
           viewerOption={{
