@@ -10,6 +10,7 @@ function App() {
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
+  const [err, setError] = useState(false)
   const viewerRef = useRef(null);
   const timer = useRef(null)
 
@@ -25,15 +26,20 @@ function App() {
         fetch(`http://localhost:5000/${search}`).then(res => res.json()).then(({ message }) => {
           setResults(message)
           setLoading(false)
+          if (message.length === 0) {
+            setError("No book found. Please try again ")
+          }
         }).catch(err => {
           console.log(err)
           setLoading(false)
+          setError(err)
         })
       }, 1000)
       return () => clearTimeout(timer.current)
     }
 
-  }, [search])
+  }, [search, err])
+  console.log(results)
   return (
     <BookContext.Provider value={{ bookContext, setBookContext }}>
 
@@ -46,6 +52,7 @@ function App() {
           </div >}
 
           {loading && <p>Loading results...</p>}
+          {err && !loading && <p> {err}</p>}
           <div className="flex flex-wrap -mx-12 overflow-hidden sm:-mx-2 xl:-mx-2">
             {
               results.map(book => <BookItem key={book["ISBN"]} book={book} />)
@@ -65,7 +72,7 @@ function App() {
 
         <Footer />
       </div >
-    </BookContext.Provider>
+    </BookContext.Provider >
   );
 }
 
