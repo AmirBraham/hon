@@ -1,21 +1,32 @@
+import React, { useState } from 'react'
 
-function BookItem(props) {
-
+function BookItem({ book }) {
+    const [src, setSrc] = useState("")
+    const { Author, ISBN, Language, Image, Title, Size, Pages } = book
     return (
-        <div className="container flex justify-center">
-            <div className="max-w-sm py-32">
-                <div className="bg-white relative shadow-lg hover:shadow-xl transition duration-500 rounded-lg">
-                    <img className="rounded-t-lg" src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1049&q=80" alt="" />
-                    <div className="py-6 px-8 rounded-lg bg-white">
-                        <h1 className="text-gray-700 font-bold text-2xl mb-3 hover:text-gray-900 hover:cursor-pointer">I'm supper dog for you.</h1>
-                        <p className="text-gray-700 tracking-wide">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eum, labore. Ea debitis beatae sequi deleniti.</p>
-                        <button className="mt-6 py-2 px-4 bg-yellow-400 text-gray-800 font-bold rounded-lg shadow-md hover:shadow-lg transition duration-300">Buy Now</button>
+        <div className="min-h-screen  py-6 flex flex-col justify-center sm:py-12 container mx-auto shadow-lg rounded-lg max-w-md hover:shadow-2xl transition duration-300 ">
+
+            <div className="py-3 sm:max-w-xl sm:mx-auto">
+                <div className=" shadow-lg border-gray-100 max-h-80	 border sm:rounded-3xl p-8 flex space-x-8">
+                    <div className="h-48 overflow-visible w-1/2">
+                        <img className="rounded-3xl shadow-lg" src={`data:image/png;base64, ${Image}`} alt="" />
+
                     </div>
-                    <div className="absolute top-2 right-2 py-2 px-4 bg-white rounded-lg">
-                        <span className="text-md">$150</span>
+                    <div className="flex flex-col w-1/2 space-y-4">
+                        <div className="flex justify-between items-start">
+                            <h2 className="text-1xl font-bold">{Title}</h2>
+                            <div className="bg-yellow-400 font-bold rounded-xl p-2">7.2</div>
+                        </div>
+                        <div>
+                            <div className="text-sm text-gray-400">Author</div>
+                            <div className="text-lg text-gray-800">{Author}</div>
+                        </div>
+                        <div className="flex text-2xl font-bold text-a">Read</div>
                     </div>
+
                 </div>
             </div>
+
         </div>
     )
 }

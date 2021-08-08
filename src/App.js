@@ -43,11 +43,12 @@ function App() {
       </div >}
 
       {loading && <p>Loading results...</p>}
-
-      {
-        results.map(book => <BookItem key={book["ISBN"]} book={book} />
-        )
-      }
+      <div class="flex items-stretch ...">
+        {
+          results.map(book => <BookItem key={book["ISBN"]} book={book} />
+          )
+        }
+      </div>
       {/* <div style={{ position: "relative", height: "100%" }}>
         <ReactEpubViewer
           viewerOption={{

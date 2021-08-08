@@ -5,6 +5,8 @@ from libgen_api.search_request import SearchRequest
 import requests
 import urllib.parse
 
+import base64
+
 
 class SearchRequestModified(SearchRequest):
     col_names = col_names = [
@@ -125,5 +127,9 @@ class LibgenSearchModified(LibgenSearch):
         soup = BeautifulSoup(page.text, "html.parser")
         img = soup.find("img")
         if img.has_attr('src'):
-            return base_url(mirror_1) + img['src']
+            # Getting image in bytes
+            response = requests.get(base_url(mirror_1) + img['src'])
+            # image encoding
+            encoded_image = base64.b64encode(response.content)
+            return encoded_image
         return ""

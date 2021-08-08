@@ -16,7 +16,7 @@ def hello_world(title):
     results = s.search_title_filtered(
         title, title_filters, exact_match=True)
     for i in range(len(results)):
-        results[i]["image"] = s.resolve_image(results[i])
+        results[i]["Image"] = s.resolve_image(results[i])
     response = jsonify(message=results)
 
     response.headers.add("Access-Control-Allow-Origin", "*")
