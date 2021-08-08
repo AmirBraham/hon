@@ -13,7 +13,7 @@ function BookItem(props) {
             <h2 className="text-1xl font-bold">{Title}</h2>
             <div className="text-lg text-gray-800">{Author}</div>
             <div className="flex text-2xl font-bold text-a">
-                <button onClick={() => setBookContext(DownloadLinks["GET"])}>
+                <button onClick={() => setBookContext(DownloadLinks["Cloudflare"])}>
 
                     Read
                 </button>
