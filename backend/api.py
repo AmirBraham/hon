@@ -5,8 +5,6 @@ from libgen_api.search_request import SearchRequest
 import requests
 import urllib.parse
 
-import base64
-
 
 class SearchRequestModified(SearchRequest):
     col_names = col_names = [
@@ -122,14 +120,10 @@ class LibgenSearchModified(LibgenSearch):
             parsed = parsed._replace(fragment='')
             return parsed.geturl()
 
-        mirror_1 = item["Mirror_1"]
-        page = requests.get(mirror_1)
+        mirror_2 = item["Mirror_2"]
+        page = requests.get(mirror_2)
         soup = BeautifulSoup(page.text, "html.parser")
         img = soup.find("img")
         if img.has_attr('src'):
-            # Getting image in bytes
-            response = requests.get(base_url(mirror_1) + img['src'])
-            # image encoding
-            encoded_image = base64.b64encode(response.content)
-            return encoded_image
+            return base_url(mirror_2) + img['src']
         return ""

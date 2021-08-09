@@ -1,5 +1,5 @@
 import Header from './Header';
-import { useRef, useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import {
   ReactEpubViewer
 } from 'react-epub-viewer'
@@ -10,63 +10,58 @@ function App() {
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
+  const [book, setBook] = useState("")
   const [err, setError] = useState(false)
   const viewerRef = useRef(null);
-  const timer = useRef(null)
-  const [bookContext, setBookContext] = useState("")
-  useEffect(() => {
 
-    clearTimeout(timer.current)
-    if (search !== "") {
-      timer.current = setTimeout(() => {
-        console.log("rendering")
-        setLoading(true)
-        fetch(`http://localhost:5000/${search}`).then(res => res.json()).then(({ message }) => {
-          setResults(message)
-          setLoading(false)
-          if (message.length === 0) {
-            setError("No book found. Please try again ")
-          }
-        }).catch(err => {
-          console.log(err)
-          setLoading(false)
-          setError(true)
-        })
-      }, 1000)
-      return () => clearTimeout(timer.current)
-    }
 
-  }, [search, err])
-  console.log(results)
+  const searchForBook = () => {
+    setLoading(true)
+    setError(false)
+    fetch(`http://localhost:5000/${search}`).then(res => res.json()).then(({ message }) => {
+      setResults(message)
+      setLoading(false)
+      if (message.length === 0) {
+        setError("No book found. Please try again ")
+      }
+    })
+      .catch(err => {
+        console.log(err)
+        setLoading(false)
+        setError(true)
+      })
+
+  }
   return (
-    <BookContext.Provider value={{ bookContext, setBookContext }}>
+    <BookContext.Provider value={{ search, setSearch, book, setBook }}>
 
       <div className="App ">
         <Header />
-        <Search />
-        {!bookContext && false && <>
-          {<div className="flex justify-center">
-            <input
-              value={search} onChange={e => setSearch(e.target.value)} type="search" className=" text-center shadow rounded border-0 p-3 outline-none" placeholder="Search by name..." />
-          </div >}
+        {!book && <>
+          <Search searchForBook={searchForBook} />
+          {loading && <div className="w-full py-12 "> <div className="mx-auto loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-14 w-14"></div></div>}
+          {err && !loading && <p> {err}</p>
 
-          {loading && <p>Loading results...</p>}
-          {err && !loading && <p> {err}</p>}
-          <div className="flex flex-wrap -mx-12 overflow-hidden sm:-mx-2 xl:-mx-2">
+          }
+
+          {!loading && !err && results && <div className="grid grid-cols-4 gap-4 justify-items-center">
             {
               results.map(book => <BookItem key={book["ISBN"]} book={book} />)
             }
           </div>
-        </>}
-        {bookContext && <div style={{ position: "relative", height: "100%" }}>
+          }
+        </>
+        }
+        {book && <div style={{ position: "relative", height: "100%" }}>
           <ReactEpubViewer
             viewerOption={{
               flow: "paginated"
             }}
-            url={bookContext}
+            url={book}
             ref={viewerRef}
           />
         </div>}
+
       </div >
     </BookContext.Provider >
   );
