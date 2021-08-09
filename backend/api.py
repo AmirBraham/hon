@@ -5,6 +5,8 @@ from libgen_api.search_request import SearchRequest
 import requests
 import urllib.parse
 
+MIRROR_SOURCES = ["GET", "Cloudflare", "IPFS.io", "Infura"]
+
 
 class SearchRequestModified(SearchRequest):
     col_names = col_names = [
@@ -132,3 +134,11 @@ class LibgenSearchModified(LibgenSearch):
             results=results, filters=filters, exact_match=exact_match
         )
         return filtered_results
+
+    def resolve_download_links(self, item):
+        mirror_1 = item
+        page = requests.get(mirror_1)
+        soup = BeautifulSoup(page.text, "html.parser")
+        links = soup.find_all("a", string=MIRROR_SOURCES)
+        download_links = {link.string: link["href"] for link in links}
+        return download_links

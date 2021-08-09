@@ -1,5 +1,5 @@
 import Header from './Header';
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import {
   ReactEpubViewer
 } from 'react-epub-viewer'
@@ -14,7 +14,12 @@ function App() {
   const [err, setError] = useState(false)
   const viewerRef = useRef(null);
 
+  useEffect(() => {
+    if (search === "") {
+      setResults([])
+    }
 
+  }, [search])
   const searchForBook = (searchBy = "Title") => {
 
     setLoading(true)
@@ -47,7 +52,7 @@ function App() {
 
           {!loading && !err && results && <div className="grid grid-cols-4 gap-4 justify-items-center">
             {
-              results.map(book => <BookItem key={book["ISBN"]} book={book} />)
+              results.map(book => <BookItem key={book["ID"]} book={book} />)
             }
           </div>
           }

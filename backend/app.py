@@ -7,8 +7,19 @@ app = Flask(__name__)
 s = LibgenSearchModified()
 
 
+@app.route("/d/", methods=["GET"])
+def getDownloadLink():
+    mirror_1 = request.args.get('url')
+    download_link = s.resolve_download_links(mirror_1)
+    response = jsonify(message=download_link)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 @app.route("/<title>", methods=["GET"])
-def hello_world(title):
+def getBooks(title):
+    print(title)
+
     search_by = request.args.get('search_by')
     results = {}
     if(search_by == "Author"):
@@ -22,10 +33,6 @@ def hello_world(title):
             title, {"Extension": "epub"}, exact_match=True)
     for i in range(len(results)):
         results[i]["Image"] = s.resolve_image(results[i])
-        download_links = s.resolve_download_links(
-            results[i]) if len(results) > 0 else []
-        results[i]["DownloadLinks"] = download_links
-
     response = jsonify(message=results)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
