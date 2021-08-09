@@ -28,6 +28,9 @@ class SearchRequestModified(SearchRequest):
 
     def get_search_page(self):
         query_parsed = "%20".join(self.query.split(" "))
+        search_url = (
+            f"http://gen.lib.rus.ec/search.php?req={query_parsed}"
+        )
         if self.search_type.lower() == "title":
             search_url = (
                 f"http://gen.lib.rus.ec/search.php?req={query_parsed}"
@@ -35,6 +38,10 @@ class SearchRequestModified(SearchRequest):
         elif self.search_type.lower() == "author":
             search_url = (
                 f"http://gen.lib.rus.ec/search.php?req={query_parsed}&column=author"
+            )
+        elif self.search_type.lower() == "isbn":
+            search_url = (
+                f"http://gen.lib.rus.ec/search.php?req={query_parsed}&column=identifier"
             )
         search_page = requests.get(search_url)
         return search_page
@@ -100,16 +107,6 @@ class LibgenSearchModified(LibgenSearch):
         search_request = SearchRequestModified(query, search_type="title")
         return search_request.aggregate_request_data()
 
-    def search_title_filtered(self, query, filters, exact_match=True):
-        search_request = SearchRequestModified(query, search_type="title")
-        results = search_request.aggregate_request_data()
-
-        filtered_results = filter_results(
-            results=results, filters=filters, exact_match=exact_match
-        )
-
-        return filtered_results
-
     def resolve_image(self, item):
         def base_url(url, with_path=False):
             parsed = urllib.parse.urlparse(url)
@@ -127,3 +124,11 @@ class LibgenSearchModified(LibgenSearch):
         if img.has_attr('src'):
             return base_url(mirror_2) + img['src']
         return ""
+
+    def search_isbn_filtered(self, query, filters, exact_match=True):
+        search_request = SearchRequestModified(query, search_type="isbn")
+        results = search_request.aggregate_request_data()
+        filtered_results = filter_results(
+            results=results, filters=filters, exact_match=exact_match
+        )
+        return filtered_results

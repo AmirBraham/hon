@@ -8,8 +8,6 @@ function Search({ searchForBook }) {
     const [searchBy, setSearchBy] = useState(SEARCH_OPTIONS[0])
     return (
         <div className="flex justify-center items-center px-20">
-
-
             <div className="flex items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500">
                 <div className="flex bg-gray-100 p-4 space-x-4 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -20,7 +18,7 @@ function Search({ searchForBook }) {
                 <div className="flex py-3 px-4 rounded-lg text-gray-500 font-semibold cursor-pointer">
                     <span onClick={() => { i.current = (SEARCH_OPTIONS.indexOf(searchBy) + 1) % SEARCH_OPTIONS.length; setSearchBy(SEARCH_OPTIONS[i.current]) }}>Search by <b>{searchBy}</b></span>
                 </div>
-                <div className="bg-green-400 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer" onClick={searchForBook}>
+                <div className="bg-green-400 py-3 px-5 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer" onClick={() => searchForBook(searchBy)}>
                     <span>Search</span>
                 </div>
             </div>
