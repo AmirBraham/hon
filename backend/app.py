@@ -20,6 +20,3 @@ def hello_world(title):
     response = jsonify(message=results)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
-
-
-@app.route("/d/<download_link>", methods=["GET"])

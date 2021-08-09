@@ -1,11 +1,11 @@
-import Footer from './Footer';
 import Header from './Header';
-import { useRef, useState, useEffect, useContext } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import {
   ReactEpubViewer
 } from 'react-epub-viewer'
 import BookItem from './BookItem';
 import { BookContext } from './BookContext';
+import Search from './components/Search';
 function App() {
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
@@ -13,9 +13,7 @@ function App() {
   const [err, setError] = useState(false)
   const viewerRef = useRef(null);
   const timer = useRef(null)
-
   const [bookContext, setBookContext] = useState("")
-
   useEffect(() => {
 
     clearTimeout(timer.current)
@@ -32,7 +30,7 @@ function App() {
         }).catch(err => {
           console.log(err)
           setLoading(false)
-          setError(err)
+          setError(true)
         })
       }, 1000)
       return () => clearTimeout(timer.current)
@@ -43,9 +41,10 @@ function App() {
   return (
     <BookContext.Provider value={{ bookContext, setBookContext }}>
 
-      <div className="App bg-gray-20">
+      <div className="App ">
         <Header />
-        {!bookContext && <>
+        <Search />
+        {!bookContext && false && <>
           {<div className="flex justify-center">
             <input
               value={search} onChange={e => setSearch(e.target.value)} type="search" className=" text-center shadow rounded border-0 p-3 outline-none" placeholder="Search by name..." />
@@ -68,9 +67,6 @@ function App() {
             ref={viewerRef}
           />
         </div>}
-
-
-        <Footer />
       </div >
     </BookContext.Provider >
   );

@@ -1,9 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { BookContext } from './BookContext'
 
 function BookItem(props) {
     const { bookContext, setBookContext } = useContext(BookContext)
-    const [src, setSrc] = useState("")
     const { Author, ISBN, Language, Image, Title, Size, Pages, DownloadLinks } = props.book
     console.log(bookContext, setBookContext)
     console.log(DownloadLinks)
@@ -14,7 +13,6 @@ function BookItem(props) {
             <div className="text-lg text-gray-800">{Author}</div>
             <div className="flex text-2xl font-bold text-a">
                 <button onClick={() => setBookContext(DownloadLinks["Cloudflare"])}>
-
                     Read
                 </button>
 
