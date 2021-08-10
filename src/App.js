@@ -14,6 +14,7 @@ function App() {
   const [book, setBook] = useState({
     downloadLink: ""
   })
+  const [currentlyReadingBooks, setCurrentlyReadingBooks] = useState([])
   const [err, setError] = useState(false)
   const viewerRef = useRef(null);
   const [rendition, setRendition] = useState(null);
@@ -33,14 +34,14 @@ function App() {
     } else {
       window.localStorage.setItem("hon", "{}")
     }
-    savedBooks[book["ID"]] = pageInfo.startCfi
+    savedBooks[book["ID"]] = { ...book, "startCfi": pageInfo.startCfi }
     window.localStorage.setItem("hon", JSON.stringify(savedBooks));
   };
   useEffect(() => {
     if (!rendition) return;
     const savedBooks = JSON.parse(window.localStorage.getItem("hon"));
-    if (savedBooks !== null) {
-      const targetCFI = savedBooks[book["ID"]];
+    if (savedBooks !== null && savedBooks[book["ID"]]) {
+      const targetCFI = savedBooks[book["ID"]]["startCfi"];
       rendition.display(targetCFI);
     }
 
@@ -69,6 +70,14 @@ function App() {
       })
 
   }
+
+  useEffect(() => {
+    if (window.localStorage.getItem("hon")) {
+      const savedBooks = JSON.parse(window.localStorage.getItem("hon"))
+      setCurrentlyReadingBooks(Object.values(savedBooks))
+
+    }
+  }, [])
   const isCurrentlyReading = book.downloadLink !== ""
   console.log(book)
   return (
@@ -102,6 +111,16 @@ function App() {
             rendtionChanged={onRenditionChanged}
           />
         </div>}
+        {!isCurrentlyReading && !loading && !err && currentlyReadingBooks && <>
+          <p>Currently Reading : </p>
+          <div className="grid grid-cols-4 gap-4 justify-items-center">
+            {
+              currentlyReadingBooks.map(book => <BookItem key={book["ID"]} book={book} />)
+            }
+          </div>
+        </>
+        }
+
 
       </div >
     </BookContext.Provider>

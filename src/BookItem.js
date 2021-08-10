@@ -5,11 +5,16 @@ function BookItem(props) {
     const { setBook } = useContext(BookContext)
     const { Author, ISBN, Language, Image, Title, Size, Pages, Mirror_1 } = props.book
     const getDownloadLink = (callback) => {
-        fetch(`http://localhost:5000/d/?url=${Mirror_1}`).then(res => res.json()).then(({ message }) => {
-            console.log(message)
-            callback({ ...props.book, downloadLink: message["Cloudflare"] })
-        }).catch(err => console.log(err))
+        if (props.book.downloadLink) {
+            console.log("saved")
+            callback(props.book)
+        } else {
 
+            fetch(`http://localhost:5000/d/?url=${Mirror_1}`).then(res => res.json()).then(({ message }) => {
+                console.log(message)
+                callback({ ...props.book, downloadLink: message["Cloudflare"] })
+            }).catch(err => console.log(err))
+        }
     }
     return (
         <div className="flex  w-full flex-col   object-contain  self-center text-center ">
