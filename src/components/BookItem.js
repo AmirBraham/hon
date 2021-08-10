@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BookContext } from '../contexts/BookContext'
 
 function BookItem(props) {
     const { setBook } = useContext(BookContext)
-    const { Author, ISBN, Language, Image, Title, Size, Pages, Mirror_1 } = props.book
+    const [bookIsInSaved, setBookIsInSaved] = useState(false)
+    const { Author, ISBN, Language, Image, Title, Size, Pages, Mirror_1, ID } = props.book
     const getDownloadLink = (callback) => {
         if (props.book.downloadLink) {
-            console.log("saved")
             callback(props.book)
         } else {
 
@@ -16,14 +16,30 @@ function BookItem(props) {
             }).catch(err => console.log(err))
         }
     }
+
+
+    useEffect(() => {
+        if (window.localStorage.getItem("hon") == null) {
+            setBookIsInSaved(false)
+        }
+        const savedBooks = JSON.parse(window.localStorage.getItem("hon"))
+        setBookIsInSaved(savedBooks[ID] != undefined)
+    }, [bookIsInSaved])
     return (
         <div className="flex  w-full flex-col   object-contain  self-center text-center ">
             <img className="w-32 m-auto shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200  rounded-3xl" src={`${Image}`} alt="" />
+
             <h2 className="text-sm font-bold py-2">{Title}</h2>
             <div className="text-lg text-gray-800">{Author}</div>
             <button onClick={() => getDownloadLink(setBook)}>
                 Read
             </button>
+            {bookIsInSaved && <p onClick={() => {
+                if (props.removeBookFromSaved) {
+                    props.removeBookFromSaved(ID)
+                }
+            }}>Remove from list</p>}
+
 
         </div>
 
