@@ -1,19 +1,50 @@
 import Header from './Header';
 import { useState, useRef, useEffect } from 'react'
 import {
-  ReactEpubViewer
+  EpubViewer
 } from 'react-epub-viewer'
 import BookItem from './BookItem';
 import { BookContext } from './BookContext';
 import Search from './components/Search';
 function App() {
+
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
-  const [book, setBook] = useState("")
+  const [book, setBook] = useState({
+    downloadLink: ""
+  })
   const [err, setError] = useState(false)
   const viewerRef = useRef(null);
+  const [rendition, setRendition] = useState(null);
+  const [chapterName, setChapterName] = useState("");
+  const [page, setPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const onRenditionChanged = (rendition) => setRendition(rendition);
+  const onPageChange = (pageInfo) => {
+    console.log(pageInfo)
+    if (pageInfo.chapterName)
+      setChapterName(pageInfo.chapterName);
+    setPage(pageInfo.currentPage)
+    setTotalPage(pageInfo.totalPage);
+    let savedBooks = {}
+    if (window.localStorage.getItem("hon") !== null) {
+      savedBooks = JSON.parse(window.localStorage.getItem("hon"))
+    } else {
+      window.localStorage.setItem("hon", "{}")
+    }
+    savedBooks[book["ID"]] = pageInfo.startCfi
+    window.localStorage.setItem("hon", JSON.stringify(savedBooks));
+  };
+  useEffect(() => {
+    if (!rendition) return;
+    const savedBooks = JSON.parse(window.localStorage.getItem("hon"));
+    if (savedBooks !== null) {
+      const targetCFI = savedBooks[book["ID"]];
+      rendition.display(targetCFI);
+    }
 
+  }, [rendition]);
   useEffect(() => {
     if (search === "") {
       setResults([])
@@ -38,12 +69,14 @@ function App() {
       })
 
   }
+  const isCurrentlyReading = book.downloadLink !== ""
+  console.log(book)
   return (
     <BookContext.Provider value={{ search, setSearch, book, setBook }}>
 
       <div className="App ">
         <Header />
-        {!book && <>
+        {!isCurrentlyReading && <>
           <Search searchForBook={searchForBook} />
           {loading && <div className="w-full py-12 "> <div className="mx-auto loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-14 w-14"></div></div>}
           {err && !loading && <p> {err}</p>
@@ -58,19 +91,24 @@ function App() {
           }
         </>
         }
-        {book && <div style={{ position: "relative", height: "100%" }}>
-          <ReactEpubViewer
-            viewerOption={{
-              flow: "paginated"
-            }}
-            url={book}
+        {isCurrentlyReading && <div style={{ position: "relative", height: "100vh" }}>
+          <h2>
+            Page: {page} / {totalPage} [{chapterName}]
+          </h2>
+          <EpubViewer
             ref={viewerRef}
+            url={book.downloadLink}
+            pageChanged={onPageChange}
+            rendtionChanged={onRenditionChanged}
           />
         </div>}
 
       </div >
-    </BookContext.Provider >
+    </BookContext.Provider>
   );
+
+
+
 }
 
 export default App;
