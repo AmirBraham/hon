@@ -1,11 +1,30 @@
 import React, { useState, useContext, useRef } from 'react'
-import { BookContext } from '../BookContext'
-function Search({ searchForBook }) {
-    const { search, setSearch } = useContext(BookContext)
+import { BookContext } from '../contexts/BookContext'
+function Search() {
+    const { search, setSearch, setLoading, setError, setResults } = useContext(BookContext)
     const i = useRef(0)
     const SEARCH_OPTIONS = ["Title", "Author", "ISBN"]
     const PLACEHOLDERS = ["Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future", "Ashlee Vance", "9780062301253"]
     const [searchBy, setSearchBy] = useState(SEARCH_OPTIONS[0])
+
+    const searchForBook = (searchBy = "Title") => {
+
+        setLoading(true)
+        setError(false)
+        fetch(`http://localhost:5000/${search}?search_by=${searchBy}`).then(res => res.json()).then(({ message }) => {
+            setResults(message)
+            setLoading(false)
+            if (message.length === 0) {
+                setError("No book found. Please try again ")
+            }
+        })
+            .catch(err => {
+                console.log(err)
+                setLoading(false)
+                setError(true)
+            })
+
+    }
     return (
         <div className="flex justify-center items-center px-20">
             <div className="flex items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500">

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { BookContext } from './BookContext'
+import { BookContext } from '../contexts/BookContext'
 
 function BookItem(props) {
     const { setBook } = useContext(BookContext)
