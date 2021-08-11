@@ -11,7 +11,7 @@ function Search() {
 
         setLoading(true)
         setError(false)
-        fetch(`/${search}?search_by=${searchBy}`).then(res => res.json()).then(({ message }) => {
+        fetch(`https://hon-app-backend.herokuapp.com//${search}?search_by=${searchBy}`).then(res => res.json()).then(({ message }) => {
             setResults(message)
             setLoading(false)
             if (message.length === 0) {
