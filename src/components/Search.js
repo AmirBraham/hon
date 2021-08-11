@@ -11,7 +11,7 @@ function Search() {
 
         setLoading(true)
         setError(false)
-        fetch(`http://localhost:5000/${search}?search_by=${searchBy}`).then(res => res.json()).then(({ message }) => {
+        fetch(`/${search}?search_by=${searchBy}`).then(res => res.json()).then(({ message }) => {
             setResults(message)
             setLoading(false)
             if (message.length === 0) {

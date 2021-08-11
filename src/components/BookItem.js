@@ -12,7 +12,7 @@ function BookItem(props) {
             callback(props.book)
         } else {
 
-            fetch(`http://localhost:5000/d/?url=${Mirror_1}`).then(res => res.json()).then(({ message }) => {
+            fetch(`/d/?url=${Mirror_1}`).then(res => res.json()).then(({ message }) => {
                 console.log(message)
                 callback({ ...props.book, downloadLink: message["Cloudflare"] })
             }).catch(err => console.log(err))
