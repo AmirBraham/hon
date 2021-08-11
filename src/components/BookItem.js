@@ -23,9 +23,11 @@ function BookItem(props) {
     useEffect(() => {
         if (window.localStorage.getItem("hon") == null) {
             setBookIsInSaved(false)
+        } else {
+            const savedBooks = JSON.parse(window.localStorage.getItem("hon"))
+            setBookIsInSaved(savedBooks[ID] != undefined)
         }
-        const savedBooks = JSON.parse(window.localStorage.getItem("hon"))
-        setBookIsInSaved(savedBooks[ID] != undefined)
+
     }, [bookIsInSaved])
     return (
         <div className="flex  w-full flex-col   object-contain  self-center text-center ">
