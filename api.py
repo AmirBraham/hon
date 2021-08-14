@@ -110,21 +110,13 @@ class LibgenSearchModified(LibgenSearch):
         return search_request.aggregate_request_data()
 
     def resolve_image(self, item):
-        def base_url(url, with_path=False):
-            parsed = urllib.parse.urlparse(url)
-            path = '/'.join(parsed.path.split('/')[:-1]) if with_path else ''
-            parsed = parsed._replace(path=path)
-            parsed = parsed._replace(params='')
-            parsed = parsed._replace(query='')
-            parsed = parsed._replace(fragment='')
-            return parsed.geturl()
-
-        mirror_2 = item["Mirror_2"]
-        page = requests.get(mirror_2)
+        base_url = "https://libgen.is/covers/"
+        mirror_1 = item["Mirror_1"]
+        page = requests.get(mirror_1)
         soup = BeautifulSoup(page.text, "html.parser")
         img = soup.find("img")
         if img.has_attr('src'):
-            return base_url(mirror_2) + img['src']
+            return base_url + img['src']
         return ""
 
     def search_isbn_filtered(self, query, filters, exact_match=True):
