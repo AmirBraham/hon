@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BookContext } from '../contexts/BookContext'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 function BookItem(props) {
     const { setBook, results } = useContext(BookContext)
     const [bookIsInSaved, setBookIsInSaved] = useState(false)
     const { Author, ISBN, Language, Image, Title, Size, Pages, Mirror_1, ID } = props.book
+    const [image, setImage] = useState("")
 
     const getDownloadLink = (callback) => {
         if (props.book.downloadLink) {
@@ -29,9 +31,16 @@ function BookItem(props) {
         }
 
     }, [bookIsInSaved])
+
     return (
+
+
         <div className="flex  w-full flex-col   object-contain  self-center text-center ">
-            <img className="w-32 m-auto shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200  rounded-3xl" src={`${Image}`} alt="" />
+            <LazyLoadImage
+                className="w-32 m-auto shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200  rounded-3xl"
+
+                src={`${Image}`} // use normal <img> attributes as props
+            />
 
             <h2 className="text-sm font-bold py-2">{Title}</h2>
             <div className="text-lg text-gray-800">{Author}</div>
