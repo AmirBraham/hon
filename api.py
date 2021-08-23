@@ -1,3 +1,4 @@
+import base64
 from bs4 import BeautifulSoup
 from libgen_api import LibgenSearch
 from libgen_api.libgen_search import filter_results
@@ -104,19 +105,29 @@ class SearchRequestModified(SearchRequest):
         return output_data
 
 
+def get_as_base64(url):
+    response = requests.get(url)
+    uri = ("data:" +
+           response.headers['Content-Type'] + ";" +
+           "base64," + str(base64.b64encode(response.content).decode("utf-8")))
+    return uri
+
+
 class LibgenSearchModified(LibgenSearch):
     def search_title(self, query):
         search_request = SearchRequestModified(query, search_type="title")
         return search_request.aggregate_request_data()
 
     def resolve_image(self, item):
-        base_url = "https://libgen.is/covers/"
+        base_url = "https://libgen.is"
         mirror_1 = item["Mirror_1"]
         page = requests.get(mirror_1)
         soup = BeautifulSoup(page.text, "html.parser")
         img = soup.find("img")
         if img.has_attr('src'):
-            return base_url + img['src']
+            print(base_url + img['src'])
+            b = get_as_base64(base_url + img['src'])
+            return b
         return ""
 
     def search_isbn_filtered(self, query, filters, exact_match=True):
