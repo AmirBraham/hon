@@ -124,7 +124,8 @@ class LibgenSearchModified(LibgenSearch):
         page = requests.get(mirror_1)
         soup = BeautifulSoup(page.text, "html.parser")
         img = soup.find("img")
-        if img.has_attr('src'):
+
+        if img is not None and img.has_attr('src'):
             print(base_url + img['src'])
             b = get_as_base64(base_url + img['src'])
             return b
