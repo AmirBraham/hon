@@ -86,6 +86,8 @@ class SearchRequestModified(SearchRequest):
                 1:
             ]  # Skip row 0 as it is the headings row
         ]
+        # restricting search to 3 first items only for now
+        raw_data = raw_data[:3]
         raw_data_with_correct_entries = []  # contains only entries that have isbn
         for row in raw_data:
             title = row[2]
@@ -98,7 +100,6 @@ class SearchRequestModified(SearchRequest):
                     new_row.append(isbn)
                 new_row += row[3:]
                 raw_data_with_correct_entries.append(new_row)
-                continue
 
         output_data = [dict(zip(self.col_names, row))
                        for row in raw_data_with_correct_entries]
@@ -114,9 +115,23 @@ def get_as_base64(url):
 
 
 class LibgenSearchModified(LibgenSearch):
-    def search_title(self, query):
+
+    def search_author_filtered(self, query, filters, exact_match=True):
+        search_request = SearchRequestModified(query, search_type="author")
+        results = search_request.aggregate_request_data()
+        filtered_results = filter_results(
+            results=results, filters=filters, exact_match=exact_match
+        )
+        return filtered_results
+
+    def search_title_filtered(self, query, filters, exact_match=True):
         search_request = SearchRequestModified(query, search_type="title")
-        return search_request.aggregate_request_data()
+        results = search_request.aggregate_request_data()
+        filtered_results = filter_results(
+            results=results, filters=filters, exact_match=exact_match
+        )
+        print("non filtered res : ", results)
+        return filtered_results
 
     def resolve_image(self, item):
         base_url = "https://libgen.is"

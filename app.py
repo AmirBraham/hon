@@ -24,7 +24,6 @@ def getDownloadLink():
 
 @app.route("/<title>", methods=["GET"])
 def getBooks(title):
-    print(title)
 
     search_by = request.args.get('search_by')
     results = {}
@@ -37,6 +36,7 @@ def getBooks(title):
     else:
         results = s.search_title_filtered(
             title, {"Extension": "epub"}, exact_match=True)
+    print("res : ", results)
     for i in range(len(results)):
         results[i]["Image"] = s.resolve_image(results[i])
     response = jsonify(message=results)
