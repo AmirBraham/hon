@@ -8,14 +8,12 @@ function BookItem(props) {
     const [bookIsInSaved, setBookIsInSaved] = useState(false)
     const { Author, ISBN, Language, Image, Title, Size, Pages, Mirror_1, ID } = props.book
     const [image, setImage] = useState("")
-
     const getDownloadLink = (callback) => {
         if (props.book.downloadLink) {
             callback(props.book)
         } else {
 
             fetch(`https://hon-app-backend.herokuapp.com//d/?url=${Mirror_1}`).then(res => res.json()).then(({ message }) => {
-                console.log(message)
                 callback({ ...props.book, downloadLink: message["Cloudflare"] })
             }).catch(err => console.log(err))
         }
@@ -49,7 +47,7 @@ function BookItem(props) {
                     Read
                 </Link>
             </button>
-            {bookIsInSaved && results.length == 0 && <p onClick={() => {
+            {bookIsInSaved && results.length === 0 && <p onClick={() => {
                 if (props.removeBookFromSaved) {
                     props.removeBookFromSaved(ID)
                 }
