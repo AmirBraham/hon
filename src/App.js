@@ -11,11 +11,10 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
   useHistory,
-  Link
 } from "react-router-dom";
 import { useSwipeable } from 'react-swipeable';
+import { Center } from "native-base"
 
 function App() {
   const [search, setSearch] = useState("")
@@ -26,7 +25,6 @@ function App() {
   })
   const [err, setError] = useState(false)
   const history = useHistory();
-  const location = useLocation()
 
   useEffect(() => {
     if (book["ID"]) {
@@ -51,26 +49,27 @@ function App() {
       <Router>
 
         <div className="App "  >
-          <Header />
-          <Switch>
+          <Center flex={1}>
+            <Header />
+            <Switch>
 
-            <Route path={`/read/`}>
-              <div {...handlers}>
-                <Book />
-              </div>
-            </Route>
-            <Route path="/" >
-              <Search />
-              {loading && <Spinner />}
-              {err && !loading && <p> {err}</p>}
-              {!loading && !err && results && <BookList />
-              }
-              {!loading && !err && <CurrentlyReading />}
-            </Route>
+              <Route path={`/read/`}>
+                <div {...handlers}>
+                  <Book />
+                </div>
+              </Route>
+              <Route path="/" >
+                <Search />
+                {loading && <Spinner />}
+                {err && !loading && <p> {err}</p>}
+                {!loading && !err && results && <BookList />
+                }
+                {!loading && !err && <CurrentlyReading />}
+              </Route>
 
 
-          </Switch>
-
+            </Switch>
+          </Center>
         </div >
         <Footer />
       </Router>
