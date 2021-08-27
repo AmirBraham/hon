@@ -87,7 +87,7 @@ class SearchRequestModified(SearchRequest):
             ]  # Skip row 0 as it is the headings row
         ]
         # restricting search to 3 first items only for now
-        raw_data = raw_data[:3]
+
         raw_data_with_correct_entries = []  # contains only entries that have isbn
         for row in raw_data:
             title = row[2]
