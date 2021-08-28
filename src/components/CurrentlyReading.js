@@ -15,9 +15,9 @@ function CurrentlyReading() {
         window.localStorage.setItem("hon", JSON.stringify(savedBooks))
         setCurrentlyReadingBooks(Object.values(savedBooks))
     }
-    return (currentlyReadingBooks.length > 0 ? <div className=" m-auto  w-3/6 items-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl ">
+    return (currentlyReadingBooks.length > 0 ? <div className=" m-auto items-center py-6 ">
         <p className="flex  py-6 px-4 rounded-lg text-gray-500 font-semibold"   >Currently Reading : </p>
-        <div className="grid grid-cols-2 gap-3 justify-items-center">
+        <div className="grid ">
             {
                 currentlyReadingBooks.map(book => <BookItem removeBookFromSaved={removeBookFromSaved} key={book["ID"]} book={book} />)
             }

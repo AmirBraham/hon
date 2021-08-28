@@ -14,6 +14,8 @@ function Book() {
     const history = useHistory();
     useEffect(() => {
         if (!rendition) return;
+
+
         const savedBooks = JSON.parse(window.localStorage.getItem("hon"));
         if (savedBooks !== null && savedBooks[book["ID"]]) {
             const targetCFI = savedBooks[book["ID"]]["startCfi"];
@@ -29,7 +31,7 @@ function Book() {
             setChapterName(pageInfo.chapterName);
         setPage(pageInfo.currentPage)
         setTotalPage(pageInfo.totalPage);
-        let savedBooks = {}
+        let savedBooks = { }
         if (window.localStorage.getItem("hon") !== null) {
             savedBooks = JSON.parse(window.localStorage.getItem("hon"))
         } else {
@@ -69,13 +71,13 @@ function Book() {
     }, [])
     return (
 
-        <div>
+        <div >
 
             <p className="text-right px-6 " ><Link to="/">Go Back</Link></p>
             {totalPage > 0 && <h2 className="text-left px-6">
                 Page: {page} / {totalPage}  [{chapterName}]
             </h2>}
-            <div style={{ height: "100vh", position: "relative" }} id="slider" >
+            <div style={{ height: "80vh", position: "relative" }} id="slider" >
 
 
                 <EpubViewer

@@ -34,24 +34,20 @@ function BookItem(props) {
 
 
         <div className="flex  w-full flex-col   object-contain  self-center text-center ">
-            <LazyLoadImage
-                className="w-32 m-auto shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200  rounded-3xl"
-
-                src={`${Image}`} // use normal <img> attributes as props
-            />
-
-            <h2 className="text-sm font-bold py-2">{Title}</h2>
-            <div className="text-lg text-gray-800">{Author}</div>
-            <button onClick={() => getDownloadLink(setBook)}>
-                <Link to="/read/">
-                    Read
-                </Link>
-            </button>
-            {bookIsInSaved && results.length === 0 && <p onClick={() => {
+            <Link to="/read/">
+                <LazyLoadImage
+                    className="w-32 m-auto shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200  rounded-3xl"
+                    onClick={() => getDownloadLink(setBook)}
+                    src={`${Image}`} // use normal <img> attributes as props
+                />
+            </Link>
+            {!bookIsInSaved && <> <h2 className="text-sm font-bold py-2">{Title}</h2>
+                <div className="text-lg text-gray-800">{Author}</div></>}
+            {bookIsInSaved && results.length === 0 && <p className="text-red-600" onClick={() => {
                 if (props.removeBookFromSaved) {
                     props.removeBookFromSaved(ID)
                 }
-            }}>Remove from list</p>}
+            }}>Remove</p>}
 
 
         </div>
