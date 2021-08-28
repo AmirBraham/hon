@@ -13,9 +13,7 @@ import {
   Route,
   useLocation,
   useHistory,
-  Link
 } from "react-router-dom";
-import { useSwipeable } from 'react-swipeable';
 
 function App() {
   const [search, setSearch] = useState("")
@@ -41,10 +39,7 @@ function App() {
 
   }, [search])
 
-  const handlers = useSwipeable({
-    onSwiped: (eventData) => console.log("User Swiped!", eventData),
 
-  });
 
   return (
     <BookContext.Provider value={{ search, setSearch, book, setBook, setLoading, loading, setError, results, setResults }}>
@@ -55,7 +50,7 @@ function App() {
           <Switch>
 
             <Route path={`/read/`}>
-              <div {...handlers}>
+              <div >
                 <Book />
               </div>
             </Route>

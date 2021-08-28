@@ -5,24 +5,13 @@ import {
 } from 'react-epub-viewer'
 import { Link, useHistory } from "react-router-dom";
 import Spinner from './Spinner';
-
+import { useSwipeable } from 'react-swipeable';
 function Book() {
     const [chapterName, setChapterName] = useState("");
     const [page, setPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [rendition, setRendition] = useState(null);
     const history = useHistory();
-    useEffect(() => {
-        if (!rendition) return;
-
-
-        const savedBooks = JSON.parse(window.localStorage.getItem("hon"));
-        if (savedBooks !== null && savedBooks[book["ID"]]) {
-            const targetCFI = savedBooks[book["ID"]]["startCfi"];
-            rendition.display(targetCFI);
-        }
-
-    }, [rendition]);
 
 
     const onRenditionChanged = (rendition) => setRendition(rendition);
@@ -49,35 +38,33 @@ function Book() {
     }, [])
 
     useEffect(() => {
-        let touchstartX = 0
-        let touchendX = 0
-
-        const slider = document.getElementById('slider')
-
-        function handleGesture() {
-            console.log(touchendX - touchstartX)
-            if (touchendX - touchstartX < -80) viewerRef.current.nextPage()
-            if (touchendX - touchstartX > 80) viewerRef.current.prevPage()
+        if (!rendition) return;
+        const savedBooks = JSON.parse(window.localStorage.getItem("hon"));
+        if (savedBooks !== null && savedBooks[book["ID"]]) {
+            const targetCFI = savedBooks[book["ID"]]["startCfi"];
+            rendition.display(targetCFI);
         }
 
-        slider.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX
-        })
+    }, [rendition, book]);
 
-        slider.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX
-            handleGesture()
-        })
-    }, [])
+
+    const handleGesture = (e) => {
+        const touchX = e.event.changedTouches[0].clientX
+        if (touchX > (window.screen.width / 2)) viewerRef.current.nextPage()
+        if (touchX < (window.screen.width / 2)) viewerRef.current.prevPage()
+    }
+    const handlers = useSwipeable({
+        onTap: eventData => handleGesture(eventData)
+    });
     return (
 
-        <div >
+        <div {...handlers}>
 
             <p className="text-right px-6 " ><Link to="/">Go Back</Link></p>
             {totalPage > 0 && <h2 className="text-left px-6">
                 Page: {page} / {totalPage}  [{chapterName}]
             </h2>}
-            <div style={{ height: "80vh", position: "relative" }} id="slider" >
+            <div style={{ height: "100vh", position: "relative" }} id="slider" >
 
 
                 <EpubViewer
