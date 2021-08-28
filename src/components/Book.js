@@ -58,13 +58,13 @@ function Book() {
     });
     return (
 
-        <div {...handlers}>
+        <div >
 
             <p className="text-right px-6 " ><Link to="/">Go Back</Link></p>
             {totalPage > 0 && <h2 className="text-left px-6">
                 Page: {page} / {totalPage}  [{chapterName}]
             </h2>}
-            <div style={{ height: "100vh", position: "relative" }} id="slider" >
+            <div {...handlers} style={{ height: "100vh", position: "relative" }} id="slider" >
 
 
                 <EpubViewer
