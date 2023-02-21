@@ -50,10 +50,9 @@ function App() {
     <BookContext.Provider value={{ search, setSearch, book, setBook, setLoading, loading, setError, results, setResults }}>
       <Router>
 
-        <div className="App "  >
+        <div className="App"  >
           <Header />
           <Switch>
-
             <Route path={`/read/`}>
               <div {...handlers}>
                 <Book />
