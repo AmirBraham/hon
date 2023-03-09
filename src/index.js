@@ -8,7 +8,6 @@ import {
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-
       <App />
     </Router>
   </React.StrictMode>,

@@ -9,15 +9,6 @@ function Book() {
     const [totalPage, setTotalPage] = useState(0);
     const [rendition, setRendition] = useState(null);
     const history = useHistory();
-    useEffect(() => {
-        if (!rendition) return;
-        const savedBooks = JSON.parse(window.localStorage.getItem("hon"));
-        if (savedBooks !== null && savedBooks[book["ID"]]) {
-            const targetCFI = savedBooks[book["ID"]]["startCfi"];
-            rendition.display(targetCFI);
-        }
-
-    }, [rendition]);
 
 
     const onRenditionChanged = (rendition) => setRendition(rendition);
@@ -26,14 +17,6 @@ function Book() {
             setChapterName(pageInfo.chapterName);
         setPage(pageInfo.currentPage)
         setTotalPage(pageInfo.totalPage);
-        let savedBooks = {}
-        if (window.localStorage.getItem("hon") !== null) {
-            savedBooks = JSON.parse(window.localStorage.getItem("hon"))
-        } else {
-            window.localStorage.setItem("hon", "{}")
-        }
-        savedBooks[book["ID"]] = { ...book, "startCfi": pageInfo.startCfi }
-        window.localStorage.setItem("hon", JSON.stringify(savedBooks));
     };
     const viewerRef = useRef(null);
     const { book } = useContext(BookContext)
@@ -45,13 +28,13 @@ function Book() {
 
     return (
 
-        <div>
+        <>
             <p className="text-right px-6 " ><Link to="/">Go Back</Link></p>
               <Reader
                     url={book.downloadLink}
                     ref={viewerRef}
                 />
-        </div>
+        </>
 
 
     )

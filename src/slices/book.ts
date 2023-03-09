@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, current, Draft } from '@reduxjs/toolkit';
 // types
 import Book from 'types/book'
 import Page from 'types/page'
@@ -56,6 +56,9 @@ const initialState: BookState = {
 /* 
 	Slice
 */
+
+
+
 const bookSlice = createSlice({
 	name: 'book',
 	initialState,
@@ -67,10 +70,12 @@ const bookSlice = createSlice({
 		/** CurrentPage 갱신 @dispatch */
 		updateCurrentPage(state, action: PayloadAction<Page>) {
 			state.currentLocation = action.payload;
+
 		},
 		/** Book 초기화 @dispatch */
 		clearBook(state) {
 			state.book = initialBook;
+
 		},
 		/** 목차 갱신 @dispatch */
 		updateToc(state, action: PayloadAction<Toc[]>) {
@@ -79,12 +84,14 @@ const bookSlice = createSlice({
 		/** 목차 초기화 @dispatch */
 		clearToc(state) {
 			state.toc = [];
+
 		},
 		/** 하이라이트 추가 */
 		pushHighlight(state, action: PayloadAction<Highlight>) {
 			const check = state.highlights.filter(h => h.key === action.payload.key);
 			if (check.length > 0) return;
 			state.highlights.push(action.payload);
+
 		},
 		/** 하이라이트 갱신 */
 		updateHighlight(state, action: PayloadAction<Highlight>) {
@@ -109,7 +116,7 @@ export interface BookState {
 	colorList: Color[];
 }
 
-export const { 
+export const {
 	updateBook,
 	clearBook,
 	updateCurrentPage,
@@ -118,6 +125,6 @@ export const {
 	pushHighlight,
 	updateHighlight,
 	popHighlight
- } = bookSlice.actions;
- 
+} = bookSlice.actions;
+
 export default bookSlice.reducer

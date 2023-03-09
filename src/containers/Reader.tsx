@@ -28,38 +28,43 @@ import { ViewerRef } from 'types'
 import Book, { BookStyle, BookOption } from 'types/book'
 import Page from 'types/page'
 import Toc from 'types/toc'
+import BookDetails from 'types/BookDetails'
 
 const Reader = ({ url, loadingView }: Props) => {
-  const dispatch = useDispatch();
-	const currentLocation = useSelector<RootState, Page>(state => state.book.currentLocation);
-  
+	const dispatch = useDispatch();
+	const book = useSelector<RootState, Book>(state => state.book.book)
+
+	const currentLocation = useSelector<RootState, Page>(state => {
+		return state.book.currentLocation
+	});
+
 	const viewerRef = useRef<ViewerRef | any>(null);
 	const navRef = useRef<HTMLDivElement | null>(null);
-  const optionRef = useRef<HTMLDivElement | null>(null);
-  const learningRef = useRef<HTMLDivElement | null>(null);
+	const optionRef = useRef<HTMLDivElement | null>(null);
+	const learningRef = useRef<HTMLDivElement | null>(null);
 
 	const [isContextMenu, setIsContextMenu] = useState<boolean>(false);
-	
-	const [bookStyle, setBookStyle] = useState<BookStyle>({
-    fontFamily: 'Origin',
-    fontSize: 18,
-    lineHeight: 1.4,
-    marginHorizontal: 15,
-    marginVertical: 5
-  });
 
-  const [bookOption, setBookOption] = useState<BookOption>({
-    flow: "paginated",
-    resizeOnOrientationChange: true,
-    spread: "auto"
-  });
+	const [bookStyle, setBookStyle] = useState<BookStyle>({
+		fontFamily: 'Origin',
+		fontSize: 18,
+		lineHeight: 1.4,
+		marginHorizontal: 15,
+		marginVertical: 5
+	});
+
+	const [bookOption, setBookOption] = useState<BookOption>({
+		flow: "paginated",
+		resizeOnOrientationChange: true,
+		spread: "auto"
+	});
 
 	const [navControl, onNavToggle] = useMenu(navRef, 300.);
 	const [optionControl, onOptionToggle, emitEvent] = useMenu(optionRef, 300);
 	const [learningControl, onLearningToggle] = useMenu(learningRef, 300);
-	const { 
-		selection, 
-		onSelection, 
+	const {
+		selection,
+		onSelection,
 		onClickHighlight,
 		onAddHighlight,
 		onRemoveHighlight,
@@ -74,15 +79,17 @@ const Reader = ({ url, loadingView }: Props) => {
 	 */
 	const onBookInfoChange = (book: Book) => dispatch(updateBook(book));
 
-  /**
-	 * Change Epub location
-	 * @param loc epubCFI or href
-	 */
+	/**
+	   * Change Epub location
+	   * @param loc epubCFI or href
+	   */
 	const onLocationChange = (loc: string) => {
+
 		if (!viewerRef.current) return;
 		viewerRef.current.setLocation(loc);
-	}	
-	
+
+	}
+
 	/**
 	 * Move page
 	 * @param type Direction
@@ -111,12 +118,13 @@ const Reader = ({ url, loadingView }: Props) => {
 	 * Set Epub viewer options
 	 * @param bookOption_ viewer option
 	 */
-	 const onBookOptionChange = (bookOption_: BookOption) => setBookOption(bookOption_);
+	const onBookOptionChange = (bookOption_: BookOption) => setBookOption(bookOption_);
 
 	/**
 	 * Change current page
 	 * @param page Epub page
 	 */
+
 	const onPageChange = (page: Page) => dispatch(updateCurrentPage(page));
 
 	/** 
@@ -131,17 +139,17 @@ const Reader = ({ url, loadingView }: Props) => {
 	/** ContextMenu off */
 	const onContextmMenuRemove = () => setIsContextMenu(false);
 
-	
-	
-  return (<>
-    <ViewerWrapper>
-      <Header 
+
+
+	return (<>
+		<ViewerWrapper>
+			<Header
 				onNavToggle={onNavToggle}
 				onOptionToggle={onOptionToggle}
 				onLearningToggle={onLearningToggle}
 			/>
 
-      <ReactEpubViewer 
+			<ReactEpubViewer
 				url={url}
 				viewerLayout={viewerLayout}
 				viewerStyle={bookStyle}
@@ -153,35 +161,35 @@ const Reader = ({ url, loadingView }: Props) => {
 				loadingView={loadingView || <LoadingView />}
 				ref={viewerRef}
 			/>
-      
-			<Footer 
+
+			<Footer
 				title={currentLocation.chapterName}
 				nowPage={currentLocation.currentPage}
 				totalPage={currentLocation.totalPage}
 				onPageMove={onPageMove}
 			/>
-    </ViewerWrapper>
+		</ViewerWrapper>
 
-    <Nav
+		<Nav
 			control={navControl}
 			onToggle={onNavToggle}
 			onLocation={onLocationChange}
 			ref={navRef}
 		/>
-    
-    <Option 
+
+		<Option
 			control={optionControl}
 			bookStyle={bookStyle}
 			bookOption={bookOption}
 			bookFlow={bookOption.flow}
-			onToggle={onOptionToggle} 
+			onToggle={onOptionToggle}
 			emitEvent={emitEvent}
 			onBookStyleChange={onBookStyleChange}
 			onBookOptionChange={onBookOptionChange}
 			ref={optionRef}
 		/>
 
-		<Learning 
+		<Learning
 			control={learningControl}
 			onToggle={onLearningToggle}
 			onClickHighlight={onClickHighlight}
@@ -201,7 +209,7 @@ const Reader = ({ url, loadingView }: Props) => {
 		/>
 
 		<Snackbar />
-  </>);
+	</>);
 }
 
 const ReaderWrapper = ({ url, loadingView }: Props) => {

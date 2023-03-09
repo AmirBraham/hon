@@ -5,7 +5,6 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 function BookItem(props) {
     const { setBook, results } = useContext(BookContext)
-    const [bookIsInSaved, setBookIsInSaved] = useState(false)
     const { Author, ISBN, Language, Image, Title, Size, Pages, Mirror_1, ID } = props.book
     const [image, setImage] = useState("")
     const getDownloadLink = (callback) => {
@@ -20,15 +19,6 @@ function BookItem(props) {
     }
 
 
-    useEffect(() => {
-        if (window.localStorage.getItem("hon") == null) {
-            setBookIsInSaved(false)
-        } else {
-            const savedBooks = JSON.parse(window.localStorage.getItem("hon"))
-            setBookIsInSaved(savedBooks[ID] != undefined)
-        }
-
-    }, [bookIsInSaved])
 
     return (
 
@@ -47,7 +37,7 @@ function BookItem(props) {
                     Read
                 </Link>
             </button>
-            {bookIsInSaved && results.length === 0 && <p onClick={() => {
+            {results.length === 0 && <p onClick={() => {
                 if (props.removeBookFromSaved) {
                     props.removeBookFromSaved(ID)
                 }

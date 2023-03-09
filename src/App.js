@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { BookContext } from './contexts/BookContext';
 import Search from './components/Search';
 import Book from './components/Book';
-import CurrentlyReading from './components/CurrentlyReading';
 import Spinner from './components/Spinner';
 import BookList from './components/BookList';
 import Footer from './components/Footer';
@@ -44,13 +43,10 @@ function App() {
   return (
     <BookContext.Provider value={{ search, setSearch, book, setBook, setLoading, loading, setError, results, setResults }}>
       <Router>
-
         <div className="App"  >
           <Switch>
             <Route path={`/read/`}>
-              <div>
                 <Book />
-              </div>
             </Route>
             <Route path="/" >
               <Header />
@@ -59,7 +55,6 @@ function App() {
               {err && !loading && <p> {err}</p>}
               {!loading && !err && results && <BookList />
               }
-              {!loading && !err && <CurrentlyReading />}
             </Route>
 
 
