@@ -3,18 +3,15 @@ https://hoon.vercel.app/ <br/>
 Hon allows you to read any book online in epub format.
 
  ## Home Page 
-<img src="https://github.com/AmirBraham/hon/blob/master/screenshots/Screen%20Shot%202021-08-11%20at%204.27.46%20PM.png" alt="Home Page" width="800"/>
-
+![image](https://user-images.githubusercontent.com/16255509/224041925-aa4f7b87-d3f2-440a-ac1b-c0eb03b2de15.png)
  ## Search by book title
-<img src="https://github.com/AmirBraham/hon/blob/master/screenshots/Screen%20Shot%202021-08-11%20at%204.25.55%20PM.png" alt="Search by title" width="800"/>
+![image](https://user-images.githubusercontent.com/16255509/224042118-82eaaa74-03ba-43b4-9fa2-5da81cf7ff65.png)
 
 
  ## Search by author
-<img src="https://github.com/AmirBraham/hon/blob/master/screenshots/Screen%20Shot%202021-08-11%20at%204.26.32%20PM.png" alt="Search by author" width="800"/>
-
+![image](https://user-images.githubusercontent.com/16255509/224042235-28c75cf1-bf2c-47f2-967d-c11311fa9058.png)
  ## Read !
-<img src="https://github.com/AmirBraham/hon/blob/master/screenshots/Screen%20Shot%202021-08-11%20at%204.26.57%20PM.png" alt="Home Page" width="800"/>
-
+![image](https://user-images.githubusercontent.com/16255509/224043431-d0271462-e295-4bb1-841c-6539ef09a145.png)
 
 
 ### Run on your own machine 
