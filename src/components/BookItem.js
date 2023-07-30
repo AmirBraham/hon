@@ -13,7 +13,7 @@ function BookItem(props) {
         } else {
 
             fetch(`https://hon-app-backend.herokuapp.com//d/?url=${Mirror_1}`).then(res => res.json()).then(({ message }) => {
-                callback({ ...props.book, downloadLink: message["Cloudflare"] })
+                callback({ ...props.book, downloadLink: message["GET"] })
             }).catch(err => console.log(err))
         }
     }
